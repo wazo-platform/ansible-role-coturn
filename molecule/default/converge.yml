@@ -1,0 +1,73 @@
+---
+- name: Converge
+  hosts: molecule_coturn
+  become: yes
+
+  vars:
+    ansible_python_interpreter: python3
+
+    coturn_log_level: INFO
+    coturn_prometheus_enabled: true
+    coturn_auth_mechanism: long-term
+    coturn_users:
+      - username: test
+        password: test
+    coturn_realm: test
+    coturn_allowed_peer_ips:
+      - 172.0.0.0/8
+    coturn_listening_port: 12345
+    coturn_alternative_listening_port: 54321
+
+    consul_enabled: true
+    consul_node_role: bootstrap
+    consul_group_name: all
+
+  pre_tasks:
+    - name: Install curl for tests purpose
+      package:
+        name: curl
+        update_cache: true
+
+  roles:
+    - role: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') | basename }}"
+
+- name: Setting up a STUN client
+  hosts: molecule-coturn-stun-client
+  become: yes
+
+  tasks:
+    - name: Create directory
+      file:
+        path: /opt/stun
+        state: directory
+
+    - name: Install NodeJS stun library
+      npm:
+        name: stun
+        path: /opt/stun
+
+    - name: Write a NodeJS client
+      copy:
+        content: |
+          const stun = require('stun');
+
+          const args = process.argv;
+          const ip = args[2];
+          const port = args[3]
+
+          if (!ip || !port) {
+              throw "Usage: node stun_client.js <ip> <port>"
+          }
+          stun.request(`${ip}:${port}`, (err, res) => {
+              if (err) {
+                  console.log(`Error fetching my IP from the STUN server at ${ip}:${port}`);
+                  console.error(err);
+              } else {
+                  const {
+                      address
+                  } = res.getXorAddress();
+                  console.log('My IP is ', address);
+              }
+          });
+        dest: /opt/stun/client.js
+        mode: "0555"

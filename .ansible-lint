@@ -1,0 +1,6 @@
+skip_list:
+  - '106'
+  - '204'
+
+exclude_paths:
+  - '../../.ansible'

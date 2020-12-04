@@ -1,0 +1,119 @@
+---
+# tasks file for ansible-role-coturn
+
+- name: Install coturn
+  apt:
+    pkg: coturn
+    state: present
+
+- name: Give coturn access to TLS cert
+  user:
+    name: "{{ coturn_user }}"
+    groups:
+      - "{{ coturn_tls_group }}"
+    append: true
+  when: coturn_tls_enabled and coturn_tls_group is defined
+
+- name: Ensure coturn is enabled
+  lineinfile:
+    dest: /etc/default/coturn
+    line: "TURNSERVER_ENABLED=1 # Managed by Ansible"
+    regexp: "^#?TURNSERVER_ENABLED="
+
+- name: Create parameters for Diffie-Hellman (could take a while)
+  command: "openssl dhparam -out /etc/coturn-dh-{{ coturn_dhparam_length }}.pem {{ coturn_dhparam_length }}"
+  args:
+    creates: /etc/coturn-dh-{{ coturn_dhparam_length }}.pem
+  when: coturn_tls_enabled
+  notify: restart coturn
+
+- name: Configure coturn
+  template:
+    dest: /etc/turnserver.conf
+    src: turnserver.conf.j2
+    owner: "{{ coturn_user }}"
+    group: "{{ coturn_group }}"
+    mode: "0440"
+  notify: restart coturn
+
+- name: Create systemd drop-in folder for coturn service
+  file:
+    state: directory
+    path: /lib/systemd/system/coturn.service.d
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Systemd drop-in to allow binding on ports < 1024
+  copy:
+    dest: /lib/systemd/system/coturn.service.d/cap_net_bind.conf
+    owner: root
+    group: root
+    mode: "0444"
+    content: |
+      # Managed by Ansible
+      # Allow binding coturn on ports < 1024
+      [Service]
+      AmbientCapabilities=CAP_NET_BIND_SERVICE
+
+- name: Systemd drop-in to choose user and group
+  copy:
+    dest: /lib/systemd/system/coturn.service.d/user_group.conf
+    owner: root
+    group: root
+    mode: "0444"
+    content: |
+      # Managed by Ansible
+      [Service]
+      User={{ coturn_user }}
+      Group={{ coturn_group }}
+
+- name: Start coturn service
+  systemd:
+    name: coturn
+    daemon-reload: yes
+    state: started
+    enabled: yes
+
+- name: Update rsyslog logrotate to happen more frequently
+  copy:
+    src: logrotate_rsyslog
+    dest: /etc/logrotate.d/rsyslog
+    owner: root
+    group: root
+    mode: "0444"
+
+- name: Setup Coturn UI consul service
+  include_role:
+    name: wazo.consul-service
+  vars:
+    consul_service_name: coturn-ui
+    consul_service_port: 9090
+    consul_service_check_method: GET
+    consul_service_check_target: http://localhost:9090/
+    consul_service_tags:
+      - published
+      - basic_auth_enabled
+  when:
+    - consul_enabled
+    - coturn_web_admin_enabled
+  tags:
+    - consul
+    - molecule-idempotence-notest
+
+- name: Setup Coturn Prometheus metrics consul service
+  include_role:
+    name: wazo.consul-service
+  vars:
+    consul_service_name: coturn-metrics
+    consul_service_port: 9641
+    consul_service_check_method: HEAD
+    consul_service_check_target: http://localhost:9641/metrics
+    consul_service_tags:
+      - prometheus
+  when:
+    - consul_enabled
+    - coturn_prometheus_enabled
+  tags:
+    - consul
+    - molecule-idempotence-notest

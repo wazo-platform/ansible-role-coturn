@@ -1,0 +1,4 @@
+---
+- src: git@github.com:TinxHQ/ansible-role-metadata.git
+  scm: git
+  name: wazo.metadata

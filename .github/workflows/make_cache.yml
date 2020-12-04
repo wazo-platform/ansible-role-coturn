@@ -1,0 +1,62 @@
+name: Make cache
+
+# GitHub Action cache is scoped, hence a run triggered by a tag won't find cache made by another run triggered from a tag
+# but anyone can access cache from the default branch. So this workflow is about making this common cache.
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: [3.7]
+
+    steps:
+      # (Un)Caching
+      - name: Cache pip
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip
+          restore-keys: |
+            ${{ runner.os }}-pip
+
+      - name: Cache Tox
+        uses: actions/cache@v2
+        with:
+          path: .tox
+          key: ${{ runner.os }}-tox
+          restore-keys: |
+            ${{ runner.os }}-tox
+
+      - name: Cache Molecule
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/molecule
+          key: ${{ runner.os }}-molecule
+          restore-keys: |
+            ${{ runner.os }}-molecule
+
+      # Setup
+      - uses: actions/checkout@v2
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Install Tox
+        run: pip install tox
+
+      - name: Setup git credentials
+        uses: fusion-engineering/setup-git-credentials@v2
+        with:
+          credentials: ${{secrets.GIT_CREDENTIALS}}
+
+      # Install test dependency
+      - name: Run Tox
+        run: tox dependency

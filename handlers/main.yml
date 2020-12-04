@@ -1,0 +1,7 @@
+---
+# handlers file for ansible-role-coturn
+
+- name: restart coturn
+  service:
+    name: coturn
+    state: restarted

@@ -1,0 +1,18 @@
+---
+galaxy_info:
+  author: "Wazo Developers"
+  description: "Setup TURN/STUN server Coturn"
+  company: "Wazo https://wazo.io"
+  license: "MIT"
+  min_ansible_version: 1.8
+  platforms:
+    - name: Debian
+      versions:
+        - buster
+  galaxy_tags:
+    - system
+    - stun
+    - turn
+    - ice
+dependencies:
+  - wazo.metadata

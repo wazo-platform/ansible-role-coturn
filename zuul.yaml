@@ -1,0 +1,8 @@
+---
+- project:
+    check:
+      jobs:
+        - wazo-tox-molecule
+    gate:
+      jobs:
+        - wazo-tox-molecule

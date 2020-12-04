@@ -1,0 +1,42 @@
+---
+dependency:
+  name: galaxy
+  options:
+    force: False
+driver:
+  name: vagrant
+  provider:
+    name: libvirt
+lint: |
+  set -e
+  yamllint .
+  ansible-lint .
+  flake8
+platforms:
+  - name: molecule-coturn-debian10
+    box: debian/buster64
+    cpu: 2
+    memory: 2048
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: dhcp
+    provider_raw_config_args:
+      - 'nic_model_type = "virtio"'
+      - 'disk_bus = "virtio"'
+      - 'volume_cache = "none"'
+      - 'storage :file, bus: "virtio", cache: "none"'
+provisioner:
+  name: ansible
+  config_options:
+    defaults:
+      forks: 20
+    ssh_connection:
+      pipelining: true
+      ssh_args: -o ControlMaster=auto -o ControlPersist=600s
+  log: true
+verifier:
+  name: testinfra
+  options:
+    tb: short
+

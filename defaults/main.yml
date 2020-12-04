@@ -1,0 +1,94 @@
+---
+# defaults file for ansible-role-coturn
+
+consul_enabled: true
+
+# Either INFO or DEBUG, any other value =~ quiet
+coturn_log_level: quiet
+
+# Prometheus metrics endpoint
+coturn_prometheus_enabled: false
+
+# Set to root / root if you want to use certbot-generated certificate/key
+coturn_user: turnserver
+coturn_group: turnserver
+
+coturn_listening_port: 3478
+coturn_alternative_listening_port: 0
+coturn_udp_enabled: true
+coturn_tcp_enabled: true
+
+coturn_stun_enabled: true
+coturn_turn_enabled: true
+coturn_ice_enabled: false
+
+coturn_listening_ips: []
+coturn_external_ips: []
+
+# If an IP is both denied and allowed, it's allowed
+# Hence you can deny a subnet except a specific IP
+coturn_denied_peer_ips:
+  - 0.0.0.0-0.255.255.255
+  - 10.0.0.0-10.255.255.255
+  - 100.64.0.0-100.127.255.255
+  - 127.0.0.0-127.255.255.255
+  - 169.254.0.0-169.254.255.255
+  - 127.0.0.0-127.255.255.255
+  - 172.16.0.0-172.31.255.255
+  - 192.0.0.0-192.0.0.255
+  - 192.0.2.0-192.0.2.255
+  - 192.88.99.0-192.88.99.255
+  - 192.168.0.0-192.168.255.255
+  - 198.18.0.0-198.19.255.255
+  - 198.51.100.0-198.51.100.255
+  - 203.0.113.0-203.0.113.255
+  - 240.0.0.0-255.255.255.255
+coturn_allowed_peer_ips: []
+coturn_allow_loopback_peers: false
+
+coturn_udp_relay_endpoints_ports_lower_bound: 49152
+coturn_udp_relay_endpoints_ports_upper_bound: 65535
+
+coturn_fingerprint_enabled: true
+coturn_check_origin_consistency_enabled: false
+
+# Either no-auth, long-term or auth-secret
+coturn_auth_mechanism: no-auth
+
+coturn_realm: ""
+
+# Users for long-term or auth-secret mechanisms
+# Passwords can be clear-text or hashed with "turnadmin -k -u {{ user }} -r {{ realm }} -p {{ clear_password }}"
+coturn_users:
+  []
+  # - login: wazo
+  #   password: wazo
+
+# For quotas, 0 means is unlimited
+coturn_user_quota: 0
+coturn_total_quota: 100
+coturn_turn_session_max_bps: 0
+coturn_turn_total_bps_capacity: 0
+
+# CLI
+coturn_cli_enabled: false
+# coturn_cli_password: anyKind0fs3cret!
+# coturn_cli_ip: 127.0.0.1
+# coturn_cli_port: 5766
+
+# Web Admin UI
+# Consul rely on the static http page for health check
+coturn_web_admin_enabled: "{{ consul_enabled }}"
+coturn_web_admin_ip: 127.0.0.1
+coturn_web_admin_port: 9090
+
+# TLS related parameters
+coturn_tls_enabled: false
+coturn_tls_v1_3_only: true
+coturn_dtls_enabled: false
+coturn_tls_listening_port: 5349
+coturn_tls_alternative_listening_port: 0
+# coturn_tls_cert: /etc/letsencrypt/live/{{ metadata_url }}/fullchain.pem
+# coturn_tls_key: /etc/letsencrypt/live/{{ metadata_url }}/privkey.pem
+coturn_tls_cipher_list: "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:!ADH:!AECDH:!MD5"
+coturn_dhparam_length: 2048

@@ -1,0 +1,35 @@
+---
+dependency:
+  name: galaxy
+  # options:
+  #   force: False
+  #   ignore-errors: True
+driver:
+  name: docker
+lint: |
+  set -e
+  yamllint .
+  ansible-lint .
+  flake8
+platforms:
+  - name: molecule-coturn-debian10
+    image: jrei/systemd-debian:10
+    privileged: True
+    volumes:
+      - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
+    command: /lib/systemd/systemd
+    groups:
+      - molecule_coturn
+    networks:
+      - name: molecule-coturn
+  - name: molecule-coturn-stun-client
+    image: node:lts-slim
+    networks:
+      - name: molecule-coturn
+provisioner:
+  name: ansible
+  log: true
+verifier:
+  name: testinfra
+  options:
+    tb: short
