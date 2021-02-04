@@ -1,3 +1,4 @@
+---
 name: Tests
 
 on:
@@ -35,7 +36,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ~/.tox
-          key: "${{ runner.os }}-tox-${{ hashFiles('**/tox.ini') }}"
+          key: "${{ runner.os }}-tox-{% raw %}${{ hashFiles('**/tox.ini') }}{% endraw %}"
           restore-keys: |
             ${{ runner.os }}-tox-
 
@@ -51,11 +52,14 @@ jobs:
         run: tox
 
       - name: Mattermost notification
+        if: ${{ failure() }}
+        # https://github.com/marketplace/actions/slack-notify
         uses: rtCamp/action-slack-notify@v2.1.0
         env:
           SLACK_WEBHOOK: "${{ secrets.MATTERMOST_WEBHOOK }}"
+          SLACK_CHANNEL: "dev-failed-tests"
           SLACK_ICON: "https://github.githubassets.com/images/modules/logos_page/Octocat.png"
           SLACK_USERNAME: "GitHub Actions"
-          SLACK_COLOR: "${{ job.status == 'success' && 'good' || 'danger' }}"
-          SLACK_MESSAGE: "${{ job.status == 'success' && 'Ansible role test succeeded :white_check_mark:' || 'Ansible role test failed :nuke:' }}"
+          SLACK_COLOR: "danger"
+          SLACK_MESSAGE: "Ansible role test failed :nuke:'"
           SLACK_FOOTER: ""
