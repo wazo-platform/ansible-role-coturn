@@ -39,4 +39,3 @@ verifier:
   name: testinfra
   options:
     tb: short
-
