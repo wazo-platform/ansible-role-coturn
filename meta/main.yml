@@ -1,5 +1,7 @@
 ---
 galaxy_info:
+  role_name: coturn
+  namespace: wazo
   author: "Wazo Developers"
   description: "Setup TURN/STUN server Coturn"
   company: "Wazo https://wazo.io"

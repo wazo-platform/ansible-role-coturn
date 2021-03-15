@@ -1,6 +1,5 @@
 skip_list:
-  - '106'
-  - '204'
+  - role-name  # Role name {0} does not match ``^[a-z][a-z0-9_]+$`` pattern
 
 exclude_paths:
   - '../../.ansible'
