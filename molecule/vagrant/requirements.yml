@@ -1,4 +1,4 @@
 ---
-- src: git@github.com:TinxHQ/ansible-role-metadata.git
+- src: git@github.com:wazo-platform/ansible-role-metadata.git
   scm: git
   name: wazo.metadata
