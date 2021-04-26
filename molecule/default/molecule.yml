@@ -1,9 +1,8 @@
 ---
 dependency:
   name: galaxy
-  # options:
-  #   force: False
-  #   ignore-errors: True
+  options:
+    ignore-certs: True
 driver:
   name: docker
 lint: |
