@@ -1,8 +1,8 @@
 ---
-- src: git@github.com:wazo-platform/ansible-role-metadata.git
+- src: https://github.com/wazo-platform/ansible-role-metadata.git
   scm: git
   name: wazo.metadata
 
-- src: git@github.com:wazo-platform/ansible-role-consul-service.git
+- src: https://github.com/wazo-platform/ansible-role-consul-service.git
   scm: git
   name: wazo.consul-service
