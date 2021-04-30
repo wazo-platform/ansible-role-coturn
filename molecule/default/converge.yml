@@ -24,10 +24,10 @@
 
   pre_tasks:
     - name: Install curl for tests purpose
-      package:
+      apt:
         name: curl
         update_cache: true
-        cache_valid_time: 600
+      tags: molecule-idempotence-notest
 
   roles:
     - role: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') | basename }}"

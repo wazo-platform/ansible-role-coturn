@@ -3,8 +3,8 @@
 
 - name: Install coturn
   apt:
-    pkg: coturn
-    state: present
+    name: coturn
+    update_cache: true
 
 - name: Give coturn access to TLS cert
   user:
@@ -82,6 +82,12 @@
     owner: root
     group: root
     mode: "0444"
+
+- name: Install consul role requirement
+  package:
+    name: unzip
+  when:
+    - consul_enabled
 
 - name: Setup Coturn UI consul service
   include_role:
