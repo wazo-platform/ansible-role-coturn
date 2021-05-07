@@ -6,3 +6,6 @@
     gate:
       jobs:
         - wazo-tox-molecule
+    auto-merge:
+      jobs:
+        - wazo-tox-molecule

@@ -1,6 +1,6 @@
 # Ansible role coturn
 
-Setup TURN/STUN server Coturn
+Setup a TURN/STUN server using [Coturn](https://github.com/coturn/coturn).
 
 This role is tested using [Molecule](https://molecule.readthedocs.io/). The default will use Docker that you must install yourself. Then run `tox` to setup python environment and start testing. If docker can't do, a Vagrant & libvirt (tested with KVM) is also possible, set up those then `tox -- test -s vagrant`.
 
@@ -28,7 +28,7 @@ See [meta/main.yml](meta/main.yml) and [molecule/default/requirements.yml](molec
     coturn_auth_mechanism: long-term
     coturn_users:
       - username: turnuser
-        password: turnpassword
+        password: turnpwd
     coturn_realm: turnrealm
     coturn_alternative_listening_port: 80
     coturn_tls_enabled: false
