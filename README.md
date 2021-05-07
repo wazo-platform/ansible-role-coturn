@@ -28,7 +28,7 @@ See [meta/main.yml](meta/main.yml) and [molecule/default/requirements.yml](molec
     coturn_auth_mechanism: long-term
     coturn_users:
       - username: turnuser
-        password: turnpassword
+        password: turnpwd
     coturn_realm: turnrealm
     coturn_alternative_listening_port: 80
     coturn_tls_enabled: false
