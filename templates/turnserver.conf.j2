@@ -218,9 +218,9 @@ no-auth
 # https://prometheus.io/docs/concepts/data_model/
 #
 {% if coturn_prometheus_enabled %}
-# no-prometheus
+prometheus
 {% else %}
-no-prometheus
+# prometheus
 {% endif %}
 
 # TURN REST API flag.

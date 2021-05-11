@@ -1,9 +1,15 @@
 ---
 # tasks file for ansible-role-coturn
 
+- name: Enable backports
+  apt_repository:
+    repo: deb http://deb.debian.org/debian buster-backports main
+    state: present
+
 - name: Install coturn
   apt:
     name: coturn
+    default_release: buster-backports
     update_cache: true
 
 - name: Give coturn access to TLS cert
