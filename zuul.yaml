@@ -1,9 +1,9 @@
 ---
 - project:
-    check:
+    wazo-check:
       jobs:
         - wazo-tox-molecule
-    gate:
+    wazo-gate:
       jobs:
         - wazo-tox-molecule
     auto-merge:
