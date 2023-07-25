@@ -13,8 +13,8 @@ lint: |
   ansible-lint .
   flake8
 platforms:
-  - name: molecule-coturn-debian10
-    box: debian/buster64
+  - name: molecule-coturn-debian11
+    box: debian/bullseye64
     cpu: 2
     memory: 2048
     interfaces:
