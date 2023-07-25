@@ -9,7 +9,6 @@
 - name: Install coturn
   apt:
     name: coturn
-    default_release: buster-backports
     update_cache: true
 
 - name: Give coturn access to TLS cert
