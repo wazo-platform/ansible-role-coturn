@@ -5,7 +5,7 @@ import testinfra.utils.ansible_runner
 
 testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
     os.environ["MOLECULE_INVENTORY_FILE"]
-).get_hosts("molecule-coturn-debian10")
+).get_hosts("molecule-coturn-debian11")
 
 
 @pytest.mark.parametrize(

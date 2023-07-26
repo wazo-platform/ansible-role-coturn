@@ -13,6 +13,6 @@ testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
 )
 def test_stun(host, port):
     cmd = host.check_output(
-        "node /opt/stun/client.js {} {}".format("molecule-coturn-debian10", port)
+        "node /opt/stun/client.js {} {}".format("molecule-coturn-debian11", port)
     )
     assert "My IP is  172" in cmd, cmd
