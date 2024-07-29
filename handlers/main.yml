@@ -2,6 +2,6 @@
 # handlers file for ansible-role-coturn
 
 - name: restart coturn
-  service:
+  ansible.builtin.service:
     name: coturn
     state: restarted

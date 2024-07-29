@@ -24,7 +24,7 @@
 
   pre_tasks:
     - name: Install curl for tests purpose
-      apt:
+      ansible.builtin.apt:
         name: curl
         update_cache: true
       tags: molecule-idempotence-notest
@@ -38,7 +38,7 @@
 
   tasks:
     - name: Create directory
-      file:
+      ansible.builtin.file:
         path: /opt/stun
         state: directory
 
@@ -48,7 +48,7 @@
         path: /opt/stun
 
     - name: Write a NodeJS client
-      copy:
+      ansible.builtin.copy:
         content: |
           const stun = require('stun');
 
