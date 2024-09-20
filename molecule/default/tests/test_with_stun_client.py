@@ -9,7 +9,8 @@ testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
 
 
 @pytest.mark.parametrize(
-    "port", ["12345", "54321"],
+    "port",
+    ["12345", "54321"],
 )
 def test_stun(host, port):
     matchers = ["My IP is  172", "My IP is  192"]

@@ -25,7 +25,7 @@
   args:
     creates: /etc/coturn-dh-{{ coturn_dhparam_length }}.pem
   when: coturn_tls_enabled
-  notify: restart coturn
+  notify: Restart coturn
 
 - name: Configure coturn
   ansible.builtin.template:
@@ -34,7 +34,7 @@
     owner: "{{ coturn_user }}"
     group: "{{ coturn_group }}"
     mode: "0440"
-  notify: restart coturn
+  notify: Restart coturn
 
 - name: Create systemd drop-in folder for coturn service
   ansible.builtin.file:
