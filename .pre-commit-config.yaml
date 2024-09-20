@@ -2,17 +2,38 @@
 # See https://pre-commit.com for more information
 # See https://pre-commit.com/hooks.html for more hooks
 repos:
+  - repo: https://github.com/PyCQA/flake8
+    rev: 6.0.0
+    hooks:
+      - id: flake8
+  - repo: https://github.com/psf/black
+    rev: 22.12.0
+    hooks:
+      - id: black
+  # Automatically update to modern python (as modern as allowed by your Python version)
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v3.15.0
+    hooks:
+      - id: pyupgrade
+        args: [--py39-plus]
+  # Automatically sort and format imports (in black compatible way)
+  - repo: https://github.com/pycqa/isort
+    rev: 5.12.0
+    hooks:
+      - id: isort
+        args: [--filter-files]
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v3.2.0
+    rev: v4.5.0
     hooks:
-      - id: trailing-whitespace
+      - id: check-yaml
       - id: end-of-file-fixer
-      - id: check-added-large-files
-  - repo: local
+      - id: trailing-whitespace
+  - repo: https://github.com/wazo-platform/wazo-git-hooks
+    rev: 1.1.1
     hooks:
-      - id: lint
-        name: Run molecule lint via tox
-        entry: tox lint
-        language: system
-        always_run: true
-        pass_filenames: false
+      - id: wazo-copyright-check
+  - repo: https://github.com/ansible-community/ansible-lint.git
+    rev: v24.6.1
+    hooks:
+      - id: ansible-lint
+        files: \.(yaml|yml)$

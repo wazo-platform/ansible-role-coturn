@@ -9,7 +9,8 @@ testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
 
 
 @pytest.mark.parametrize(
-    "name", ["coturn"],
+    "name",
+    ["coturn"],
 )
 def test_packages(host, name):
     print(testinfra_hosts)
