@@ -41,9 +41,12 @@
       ansible.builtin.file:
         path: /opt/stun
         state: directory
+        owner: root
+        group: root
+        mode: '0770'
 
     - name: Install NodeJS stun library
-      npm:
+      community.general.npm:
         name: stun
         path: /opt/stun
 
