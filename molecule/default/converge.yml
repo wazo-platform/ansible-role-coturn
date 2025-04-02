@@ -7,7 +7,6 @@
     ansible_python_interpreter: python3
 
     coturn_log_level: INFO
-    coturn_prometheus_enabled: true
     coturn_auth_mechanism: long-term
     coturn_users:
       - username: test

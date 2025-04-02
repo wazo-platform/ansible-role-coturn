@@ -107,23 +107,6 @@
     - consul
     - molecule-idempotence-notest
 
-- name: Setup Coturn Prometheus metrics consul service
-  ansible.builtin.include_role:
-    name: wazo.consul-service
-  vars:
-    consul_service_name: coturn-metrics
-    consul_service_port: 9641
-    consul_service_check_method: HEAD
-    consul_service_check_target: http://localhost:9641/metrics
-    consul_service_tags:
-      - prometheus
-  when:
-    - consul_enabled
-    - coturn_prometheus_enabled
-  tags:
-    - consul
-    - molecule-idempotence-notest
-
 - name: Consul service file
   ansible.builtin.copy:
     content: |
