@@ -2,10 +2,10 @@
 - project:
     wazo-check:
       jobs:
-        - wazo-tox-molecule-bullseye
+        - wazo-tox-molecule-bookworm
     wazo-gate:
       jobs:
-        - wazo-tox-molecule-bullseye
+        - wazo-tox-molecule-bookworm
     auto-merge:
       jobs:
-        - wazo-tox-molecule-bullseye
+        - wazo-tox-molecule-bookworm
