@@ -1,7 +1,3 @@
-__pycache__
-.tox
-.vagrant
-.vscode
 *.pyc
-molecule.log
-roles
+.ansible
+.tox
