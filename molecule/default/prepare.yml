@@ -1,0 +1,18 @@
+---
+- name: Prepare
+  hosts: all
+  become: yes
+
+  tasks:
+  - name: Set apt retries for debian <=12
+    ansible.builtin.copy:
+      dest: /etc/apt/apt.conf.d/99-retries.conf
+      content: |
+        Acquire::Retries "5";
+      owner: root
+      group: root
+      mode: "0644"
+    become: true
+    when:
+      - ansible_distribution == "Debian"
+      - ansible_distribution_major_version | int <= 12
