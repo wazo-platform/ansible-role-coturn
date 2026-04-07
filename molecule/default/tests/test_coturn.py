@@ -22,7 +22,6 @@ def test_packages(host, name):
 @pytest.mark.parametrize(
     "path",
     [
-        "/etc/consul/consul.d/coturn-metrics.service.json",
         "/etc/consul/consul.d/coturn-ui.service.json",
         "/etc/default/coturn",
         "/etc/logrotate.d/rsyslog",
@@ -58,9 +57,3 @@ def test_admin_ui(host):
         cmd = host.check_output("curl http://localhost:9090/")
         assert "TURN" in cmd, cmd
 
-
-# TODO enable when https://github.com/coturn/coturn/pull/517 is released (version > 4.5.1.3)
-# def test_metrics(host):
-#     with host.sudo():
-#         cmd = host.check_output("curl http://localhost:9641/")
-#         assert "# HELP turn_status" in cmd, cmd

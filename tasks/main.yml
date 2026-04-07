@@ -107,19 +107,29 @@
     - consul
     - molecule-idempotence-notest
 
-- name: Setup Coturn Prometheus metrics consul service
-  ansible.builtin.include_role:
-    name: wazo.consul-service
-  vars:
-    consul_service_name: coturn-metrics
-    consul_service_port: 9641
-    consul_service_check_method: HEAD
-    consul_service_check_target: http://localhost:9641/metrics
-    consul_service_tags:
-      - prometheus
-  when:
-    - consul_enabled
-    - coturn_prometheus_enabled
-  tags:
-    - consul
-    - molecule-idempotence-notest
+- name: Consul service file
+  ansible.builtin.copy:
+    content: |
+      {
+        "service": {
+          "name": "coturn-tcp",
+          "id": "coturn-tcp-{{ metadata_id }}",
+          "meta": {
+              "Owner": "{{ metadata_owner }}",
+              "Environment": "{{ metadata_environment }}",
+              "Service": "coturn-tcp"
+          },
+          "port": 5349,
+          "check":
+            {
+              "id": "tcp-5349",
+              "name": "TCP port 5349",
+              "tcp": "127.0.0.1:5349",
+              "interval": "10s",
+              "timeout": "1s"
+            }
+        }
+      }
+    dest: "/etc/consul/consul.d/coturn-tcp.service.json"
+  notify: Reload consul
+  tags: consul

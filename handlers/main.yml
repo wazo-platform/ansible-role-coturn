@@ -5,3 +5,8 @@
   ansible.builtin.service:
     name: coturn
     state: restarted
+
+- name: Reload consul
+  ansible.builtin.service:
+    name: consul
+    state: reloaded
