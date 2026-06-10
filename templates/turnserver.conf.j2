@@ -829,10 +829,10 @@ web-admin-port={{ coturn_web_admin_port }}
 
 # Do not allow an TLS/DTLS version of protocol
 #
-{% if coturn_tls_v1_3_only %}
+{% if coturn_tls_min_v1_2 %}
 no-tlsv1
 no-tlsv1_1
-no-tlsv1_2
+#no-tlsv1_2
 {% else %}
 #no-tlsv1
 #no-tlsv1_1
