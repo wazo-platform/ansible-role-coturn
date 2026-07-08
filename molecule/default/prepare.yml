@@ -1,6 +1,6 @@
 ---
 - name: Prepare
-  hosts: all
+  hosts: all:!molecule-coturn-stun-client
   become: yes
 
   tasks:
@@ -16,3 +16,74 @@
     when:
       - ansible_distribution == "Debian"
       - ansible_distribution_major_version | int <= 12
+
+  - name: Install curl for tests purpose
+    ansible.builtin.apt:
+      name: curl
+      update_cache: true
+
+  # wazo.consul falls back to dnsmasq when systemd-resolved is not running
+  # (as in this container). Its dnsmasq config uses `no-resolv` with upstream
+  # servers taken only from consul_dnsmasq_servers (default: []), then repoints
+  # /etc/resolv.conf at dnsmasq. With no upstream, all non-consul name
+  # resolution breaks. Capture the container's current nameservers (Docker's
+  # embedded DNS, 127.0.0.11) and hand them to dnsmasq as upstreams.
+  - name: Read existing DNS nameservers before consul rewrites resolv.conf
+    ansible.builtin.shell: |
+      set -o pipefail
+      awk '/^nameserver/ { print $2 }' /etc/resolv.conf
+    args:
+      executable: /bin/bash
+    register: existing_nameservers
+    changed_when: false
+
+  - name: Include consul role
+    ansible.builtin.include_role:
+      name: wazo.consul
+    vars:
+      consul_node_role: bootstrap
+      consul_dnsmasq_servers: "{{ existing_nameservers.stdout_lines }}"
+
+- name: Setting up a STUN client
+  hosts: molecule-coturn-stun-client
+  become: yes
+
+  tasks:
+    - name: Create directory
+      ansible.builtin.file:
+        path: /opt/stun
+        state: directory
+        owner: root
+        group: root
+        mode: '0770'
+
+    - name: Install NodeJS stun library
+      community.general.npm:
+        name: stun
+        path: /opt/stun
+
+    - name: Write a NodeJS client
+      ansible.builtin.copy:
+        content: |
+          const stun = require('stun');
+
+          const args = process.argv;
+          const ip = args[2];
+          const port = args[3]
+
+          if (!ip || !port) {
+              throw "Usage: node stun_client.js <ip> <port>"
+          }
+          stun.request(`${ip}:${port}`, (err, res) => {
+              if (err) {
+                  console.log(`Error fetching my IP from the STUN server at ${ip}:${port}`);
+                  console.error(err);
+              } else {
+                  const {
+                      address
+                  } = res.getXorAddress();
+                  console.log('My IP is ', address);
+              }
+          });
+        dest: /opt/stun/client.js
+        mode: "0555"

@@ -3,6 +3,10 @@
   scm: git
   name: wazo.metadata
 
+- src: https://github.com/wazo-platform/ansible-role-consul.git
+  scm: git
+  name: wazo.consul
+
 - src: https://github.com/wazo-platform/ansible-role-consul-service.git
   scm: git
   name: wazo.consul-service
