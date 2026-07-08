@@ -22,8 +22,8 @@ def test_packages(host, name):
 @pytest.mark.parametrize(
     "path",
     [
-        "/etc/consul/consul.d/coturn-metrics.service.json",
-        "/etc/consul/consul.d/coturn-ui.service.json",
+        "/etc/consul.d/coturn-metrics.service.json",
+        "/etc/consul.d/coturn-ui.service.json",
         "/etc/default/coturn",
         "/etc/logrotate.d/rsyslog",
         "/etc/turnserver.conf",
