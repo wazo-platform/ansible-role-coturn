@@ -3,9 +3,13 @@ import os
 import pytest
 import testinfra.utils.ansible_runner
 
-testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
+runner = testinfra.utils.ansible_runner.AnsibleRunner(
     os.environ["MOLECULE_INVENTORY_FILE"]
-).get_hosts("molecule-coturn-stun-client")
+)
+testinfra_hosts = runner.get_hosts("molecule-coturn-stun-client")
+
+# The coturn container name embeds the Debian version under test
+coturn_host = runner.get_hosts("molecule_coturn")[0]
 
 
 @pytest.mark.parametrize(
@@ -14,7 +18,5 @@ testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
 )
 def test_stun(host, port):
     matchers = ["My IP is  172", "My IP is  192"]
-    cmd = host.check_output(
-        "node /opt/stun/client.js {} {}".format("molecule-coturn-debian11", port)
-    )
+    cmd = host.check_output(f"node /opt/stun/client.js {coturn_host} {port}")
     assert any(match in cmd for match in matchers)

@@ -4,8 +4,8 @@ dependency:
 driver:
   name: docker
 platforms:
-  - name: molecule-coturn-debian11
-    image: jrei/systemd-debian:11
+  - name: molecule-coturn-debian${MOLECULE_DEBIAN_VERSION:-11}
+    image: wazoplatform/systemd-debian:${MOLECULE_DEBIAN_VERSION:-11}
     privileged: True
     volumes:
       - "/sys/fs/cgroup:/sys/fs/cgroup:rw"
