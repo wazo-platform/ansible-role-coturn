@@ -6,6 +6,11 @@ This role is tested using [Molecule](https://molecule.readthedocs.io/). The
 default will use Docker that you must install yourself. Then run `tox` to setup
 python environment and start testing.
 
+Two test tracks are available:
+
+* `tox -e molecule-ansible8`: Debian 11 with Ansible 8 (legacy)
+* `tox -e molecule-ansible13`: Debian 13 with Ansible 13
+
 ## Requirements
 
 Python & [tox](https://tox.readthedocs.io). See imports in `library/*` and tasks in `molecule/default/converge.yml` if any specific, but those should be added in `tox.ini`.

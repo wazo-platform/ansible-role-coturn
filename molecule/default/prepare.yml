@@ -14,8 +14,8 @@
       mode: "0644"
     become: true
     when:
-      - ansible_distribution == "Debian"
-      - ansible_distribution_major_version | int <= 12
+      - ansible_facts['distribution'] == "Debian"
+      - ansible_facts['distribution_major_version'] | int <= 12
 
   - name: Install curl for tests purpose
     ansible.builtin.apt:

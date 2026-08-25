@@ -34,12 +34,11 @@ repos:
     hooks:
       - id: ansible-lint
         name: ansible-lint (with isolated roles)
-        language_version: python3.11
+        language_version: python3
         additional_dependencies:
-          - ansible  # Include community roles
+          - ansible  # Include community collections
         entry: >
           bash -eu -c '
-          export ANSIBLE_ROLES_PATH=${VIRTUAL_ENV}/.ansible/roles &&
           ansible-galaxy install -r molecule/default/requirements.yml &&
           python3 -m ansiblelint -v --force-color
           '
