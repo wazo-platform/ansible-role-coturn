@@ -84,7 +84,9 @@ coturn_web_admin_port: 9090
 
 # TLS related parameters
 coturn_tls_enabled: false
-coturn_tls_v1_3_only: true
+# Disable the obsolete TLS 1.0/1.1 on the TURNS listener but keep TLS 1.2 (and 1.3).
+# TURN clients, turnutils_uclient and browsers negotiate TLS 1.2
+coturn_tls_min_v1_2: true
 coturn_dtls_enabled: false
 
 coturn_tls_listening_port: 5349
